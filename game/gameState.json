@@ -1,0 +1,18 @@
+{
+  "CurrentLevel": 2,
+  "PlayerPosition": {
+    "PosX": 2,
+    "PosY": 2
+  },
+  "Boxes": [
+    {
+      "PosX": 2,
+      "PosY": 1
+    },
+    {
+      "PosX": 4,
+      "PosY": 2
+    }
+  ],
+  "GameState": "Running"
+}
