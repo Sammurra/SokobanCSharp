@@ -1,4 +1,5 @@
-﻿using libs;
+﻿using libs;  // Make sure this is included
+using System.IO;
 
 class Program
 {
@@ -43,6 +44,11 @@ class Program
     {
         Console.Clear();
         Console.WriteLine("Starting new game...");
+
+        var dialogHandler = new DialogHandler();  // Ensure DialogHandler is in the libs namespace
+        dialogHandler.LoadDialog("../dialog.json");
+        dialogHandler.DisplayDialog();  // Display the introduction dialog
+
         var engine = GameEngine.Instance;
         var inputHandler = InputHandler.Instance;
 
