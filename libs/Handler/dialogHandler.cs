@@ -17,7 +17,7 @@ namespace libs
     {
         public string Text { get; set; }
         public int NextId { get; set; }
-        public bool ExitGame { get; set; }  // Add this property to handle exiting the game
+        public bool ExitGame { get; set; }  
     }
 
     public class DialogHandler

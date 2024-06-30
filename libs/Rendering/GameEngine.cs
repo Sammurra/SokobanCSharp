@@ -45,7 +45,7 @@
 
     public void Setup()
 {
-    Console.WriteLine("Setting up level: " + currentLevel);
+   
     Console.OutputEncoding = System.Text.Encoding.UTF8;
     dynamic gameData = FileHandler.ReadJson();
     map.MapWidth = gameData.map.width;
@@ -64,7 +64,7 @@
     if (!levelData.TryGetValue(currentLevel, out var objectsToLoad))
     {
         Console.WriteLine("Congratulations! You've completed all levels!");
-        Environment.Exit(0);  // Gracefully exit the game
+        Environment.Exit(0);  // exit the game
         return;
     }
 
