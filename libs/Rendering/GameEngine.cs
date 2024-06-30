@@ -43,47 +43,45 @@
             return _focusedObject;
         }
 
-        public void Setup()
-        {
-            Console.WriteLine("Setting up level: " + currentLevel);
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
-            dynamic gameData = FileHandler.ReadJson();
-            map.MapWidth = gameData.map.width;
-            map.MapHeight = gameData.map.height;
-            gameObjects.Clear();
-            gameObjectFactory.ResetAmountOfBoxes();
-            SetGameState(GameState.Running);
+    public void Setup()
+{
+    Console.WriteLine("Setting up level: " + currentLevel);
+    Console.OutputEncoding = System.Text.Encoding.UTF8;
+    dynamic gameData = FileHandler.ReadJson();
+    map.MapWidth = gameData.map.width;
+    map.MapHeight = gameData.map.height;
+    gameObjects.Clear();
+    gameObjectFactory.ResetAmountOfBoxes();
+    SetGameState(GameState.Running);
 
-            dynamic objectsToLoad;
-            if (currentLevel == 1)
-            {
-                objectsToLoad = gameData.First.gameObjects;
-            }
-            else if (currentLevel == 2)
-            {
-                objectsToLoad = gameData.Second.gameObjects;
-            }
-            else if (currentLevel == 3)
-            {
-                objectsToLoad = gameData.Third.gameObjects;
-            }
-            else
-            {
-                Console.WriteLine("Congratulations! You've completed all levels!");
-                Environment.Exit(0);
-                return;
-            }
+    var levelData = new Dictionary<int, dynamic>
+    {
+        { 1, gameData.First.gameObjects },
+        { 2, gameData.Second.gameObjects },
+        { 3, gameData.Third.gameObjects }
+    };
 
-            foreach (var gameObject in objectsToLoad)
-            {
-                AddGameObject(gameObjectFactory.CreateGameObject(gameObject));
-                Console.WriteLine($"Added game object: {gameObject.Type} at ({gameObject.PosX}, {gameObject.PosY})");
-            }
+    if (!levelData.TryGetValue(currentLevel, out var objectsToLoad))
+    {
+        Console.WriteLine("Congratulations! You've completed all levels!");
+        Environment.Exit(0);  // Gracefully exit the game
+        return;
+    }
 
-            _focusedObject = gameObjects.OfType<Player>().First();
-            Console.WriteLine("Focused object set to player at: (" + _focusedObject.PosX + ", " + _focusedObject.PosY + ")");
-            Render();
-        }
+    foreach (var gameObject in objectsToLoad)
+    {
+        AddGameObject(gameObjectFactory.CreateGameObject(gameObject));
+        Console.WriteLine($"Added game object: {gameObject.Type} at ({gameObject.PosX}, {gameObject.PosY})");
+    }
+
+    _focusedObject = gameObjects.OfType<Player>().FirstOrDefault();
+    if (_focusedObject != null)
+    {
+        Console.WriteLine("Focused object set to player at: (" + _focusedObject.PosX + ", " + _focusedObject.PosY + ")");
+    }
+    Render();
+}
+
 
         public void Render()
         {
@@ -123,22 +121,24 @@
         }
 
         public void CheckWinCondition()
-        {
-            var boxes = gameObjects.OfType<Box>().ToList();
-            var targets = gameObjects.OfType<Target>().ToList();
+{
+    var boxes = gameObjects.OfType<Box>().ToList();
+    var targets = gameObjects.OfType<Target>().ToList();
 
-            Console.WriteLine("Checking win condition: Boxes = " + boxes.Count + ", Targets = " + targets.Count);
+    Console.WriteLine("Checking win condition: Boxes = " + boxes.Count + ", Targets = " + targets.Count);
 
-            if (gameObjectFactory.AreAllBoxesOnTargets(boxes, targets))
-            {
-                Console.WriteLine("You won!!! :)))");
-                SetGameState(GameState.Won);
-            }
-            else
-            {
-                Console.WriteLine("Win condition not met.");
-            }
-        }
+    bool allBoxesOnTargets = boxes.All(box => targets.Any(target => target.PosX == box.PosX && target.PosY == box.PosY));
+
+    if (allBoxesOnTargets)
+    {
+        Console.WriteLine("You won!!! :)))");
+        SetGameState(GameState.Won);
+    }
+    else
+    {
+        Console.WriteLine("Win condition not met.");
+    }
+}
 
         public void SetGameState(GameState state)
         {
@@ -177,6 +177,6 @@
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write(' ');
             }
-        }
-    }
+        }
+    }
 }
