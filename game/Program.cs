@@ -16,7 +16,7 @@ class Program
         Console.WriteLine("============");
         Console.WriteLine("1. Start New Game");
         Console.WriteLine("2. Exit");
-        Console.WriteLine("Select an option:");
+        Console.WriteLine("Select an option: 1 or 2");
 
         ConsoleKeyInfo keyInfo = Console.ReadKey(true);
         HandleMenuOption(keyInfo.Key);
@@ -45,8 +45,19 @@ class Program
         Console.Clear();
         Console.WriteLine("Starting new game...");
 
-        var dialogHandler = new DialogHandler();  // Ensure DialogHandler is in the libs namespace
-        dialogHandler.LoadDialog("../dialog.json");
+        var dialogHandler = new DialogHandler();
+        string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        string dialogPath = @"C:\SokobanC#\SokobanGame-main\dialog.json";
+        if (!File.Exists(dialogPath))
+        {
+            Console.WriteLine($"Error: Could not find file '{dialogPath}'");
+            Console.WriteLine("Press any key to return to the main menu...");
+            Console.ReadKey(true);
+            ShowMenu();
+            return;
+        }
+
+        dialogHandler.LoadDialog(dialogPath);
         dialogHandler.DisplayDialog();  // Display the introduction dialog
 
         var engine = GameEngine.Instance;

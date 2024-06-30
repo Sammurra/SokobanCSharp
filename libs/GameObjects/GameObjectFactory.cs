@@ -34,7 +34,6 @@ public class GameObjectFactory : IGameObjectFactory {
 
     public void IncrementAmountOfBoxes() {
         amountOfBoxes++;
-        Console.WriteLine($"Incrementing amount of boxes: {amountOfBoxes}");
     }
 
     public void ResetAmountOfBoxes() {
@@ -44,7 +43,6 @@ public class GameObjectFactory : IGameObjectFactory {
     public void DecrementAmountOfBoxes() {
         if (amountOfBoxes > 0) {
             amountOfBoxes--;
-            Console.WriteLine($"Decrementing amount of boxes: {amountOfBoxes}");
         }
     }
 

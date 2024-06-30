@@ -1,21 +1,40 @@
 {
-    "dialog": [
-      {
-        "id": 1,
-        "text": "Welcome to Sokoban!"
-      },
-      {
-        "id": 2,
-        "text": "Your goal is to push all the boxes onto the targets."
-      },
-      {
-        "id": 3,
-        "text": "Use the arrow keys to move around."
-      },
-      {
-        "id": 4,
-        "text": "Press any key to start the game."
-      }
-    ]
-  }
-  
+  "dialog": [
+    {
+      "id": 1,
+      "text": "Welcome to Sokoban! Would you like to hear how to play?",
+      "choices": [
+        { "text": "Yes", "nextId": 2 },
+        { "text": "No", "nextId": 5, "ExitGame": true }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "Your goal is to push all the boxes onto the targets.",
+      "nextId": 3
+    },
+    {
+      "id": 3,
+      "text": "Use the arrow keys to move around. Do you understand?",
+      "choices": [
+        { "text": "Yes", "nextId": 4 },
+        { "text": "No", "nextId": 6 }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "Great! Press any key to start the game.",
+      "nextId": null
+    },
+    {
+      "id": 5,
+      "text": "Alright, press any key to start the game.",
+      "nextId": null
+    },
+    {
+      "id": 6,
+      "text": "No problem, let's go through it again.",
+      "nextId": 2
+    }
+  ]
+}

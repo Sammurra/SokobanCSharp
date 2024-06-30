@@ -9,27 +9,78 @@ namespace libs
     {
         public int Id { get; set; }
         public string Text { get; set; }
+        public List<DialogChoice> Choices { get; set; }
+        public int? NextId { get; set; }
+    }
+
+    public class DialogChoice
+    {
+        public string Text { get; set; }
+        public int NextId { get; set; }
+        public bool ExitGame { get; set; }  // Add this property to handle exiting the game
     }
 
     public class DialogHandler
     {
-        public List<DialogNode> DialogNodes { get; private set; }
+        private Dictionary<int, DialogNode> dialogNodes;
 
         public void LoadDialog(string filePath)
         {
             string json = File.ReadAllText(filePath);
             var dialogData = JsonConvert.DeserializeObject<Dictionary<string, List<DialogNode>>>(json);
-            DialogNodes = dialogData["dialog"];
+            dialogNodes = new Dictionary<int, DialogNode>();
+            foreach (var node in dialogData["dialog"])
+            {
+                dialogNodes[node.Id] = node;
+            }
         }
 
         public void DisplayDialog()
         {
-            foreach (var node in DialogNodes)
+            DisplayNode(dialogNodes[1]);
+        }
+
+        private void DisplayNode(DialogNode node)
+        {
+            Console.Clear();
+            Console.WriteLine(node.Text);
+
+            if (node.Choices != null && node.Choices.Count > 0)
             {
-                Console.Clear();
-                Console.WriteLine(node.Text);
-                Console.ReadKey(true);  // Wait for the user to press a key to proceed to the next dialog node
+                for (int i = 0; i < node.Choices.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {node.Choices[i].Text}");
+                }
+
+                int choice = GetChoice(node.Choices.Count);
+                if (node.Choices[choice].ExitGame)
+                {
+                    Console.WriteLine("Exiting game...");
+                    Environment.Exit(0);
+                }
+                DisplayNode(dialogNodes[node.Choices[choice].NextId]);
             }
+            else if (node.NextId.HasValue)
+            {
+                Console.ReadKey(true);
+                DisplayNode(dialogNodes[node.NextId.Value]);
+            }
+            else
+            {
+                Console.ReadKey(true);
+            }
+        }
+
+        private int GetChoice(int maxChoice)
+        {
+            int choice;
+            do
+            {
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                choice = keyInfo.KeyChar - '1';
+            } while (choice < 0 || choice >= maxChoice);
+
+            return choice;
         }
     }
 }

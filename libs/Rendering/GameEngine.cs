@@ -125,19 +125,16 @@
     var boxes = gameObjects.OfType<Box>().ToList();
     var targets = gameObjects.OfType<Target>().ToList();
 
-    Console.WriteLine("Checking win condition: Boxes = " + boxes.Count + ", Targets = " + targets.Count);
+   
 
     bool allBoxesOnTargets = boxes.All(box => targets.Any(target => target.PosX == box.PosX && target.PosY == box.PosY));
 
     if (allBoxesOnTargets)
     {
-        Console.WriteLine("You won!!! :)))");
+        Console.WriteLine("You won!!!");
         SetGameState(GameState.Won);
     }
-    else
-    {
-        Console.WriteLine("Win condition not met.");
-    }
+  
 }
 
         public void SetGameState(GameState state)
